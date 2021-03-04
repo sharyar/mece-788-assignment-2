@@ -14,7 +14,7 @@ function [Index, Error] = BestInd_d_Features_Incomplete(d, Objective, Data)
 % Index.
 
 
-Index = []; % You Should Find/Return Index Values
+% Index = []; % You Should Find/Return Index Values
 Error = []; % You Should Find/Return Error Values
 
 % STEP 1:
@@ -22,13 +22,24 @@ Error = []; % You Should Find/Return Error Values
 Input = Data.Input;
 
 % Evaluate ANN Error Using One Feature at a Time
+num_features = Data.NumFeatures;
 
+for i = 1:num_features
+    feature_to_test = zeros(num_features);
+    feature_to_test(i) = 1;
+    Error(i) = Objective(feature_to_test);
+end
 
 % STEP 2: Sort Obtained Errors
+[~, sort_order] = sort(Error);
 
 
 % STEP 3: 
 % Select First d Features With Minimum Error
+Index = zeros(num_features);
+for iter = 1:d
+    Index(sort_order(iter)) = 1;
+end
 
 % Create a Binary output Named "Index"
 
