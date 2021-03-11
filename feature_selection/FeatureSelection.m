@@ -6,7 +6,7 @@ clear
 Dataset_Name = 'BodyFat';
 % Load Dataset
 Data = LoadData(Dataset_Name);
-
+pl
 %% (2) Sequential Forward/Backward Search
 % Create Objectve Function
 Objective = @(Input_tr, Output_tr, Input_test, Output_test) SequentialFeatureSelection(...
@@ -18,7 +18,7 @@ opts = statset('Display','iter');
 
 %% (3) Laplacian Scores Method
 % d --> Desired Number of Features 
-d = 3; 
+d = 5; 
 
 [Index_LS, LSs] = fsulaplacian(Data.Input','Distance', 'seuclidean');
 
@@ -40,18 +40,20 @@ Objective = @(Index) FeatureSelectionObjective(...
     Index, Data, WeightTrain, NumExecutions);
 
 % d --> Desired Number of Features 
-d = 3; 
+d = 5; 
 
 [SFIndex_BIdF, Error] = BestInd_d_Features_Incomplete(d, Objective, Data);
 
 %% (5) Principal Component Analysis
 % d --> Desired Number of Features 
-d = 3;
+d = 5;
 
 % Apply PCA
 [~, score, ~, ~,explained, ~] = pca(Data.Input'); 
 plot(1:Data.NumFeatures, cumsum(explained), '-x')
 xticks(1:Data.NumFeatures), grid on
+xlabel('Number of Features');
+ylabel('% of Total Variance explained by each Componenent')
 
 % Create Transformed Input
 Data_PCA = Data;
@@ -60,16 +62,26 @@ Data_PCA.d = d;
 
 %% (6) Kernel Principal Component Analysis (Complete This Section)
 % d --> Desired Number of Features 
-d = 3;
+d = 5;
 
 % Kernel Type: Linear, Polynomial, Gaussian, etc.
-Kernel.Type = 'Linear';
-Kernel.Parameter = 1;
+Kernel.Type = 'Laplacian';
+Kernel.Parameter = 100;
 
 % Apply Kernel PCA
 Data_KPCA = Data;
 Data_KPCA.Input = KernelPCA_Incomplete(Data.Input', Kernel, d); 
 Data_KPCA.d = d;
+%% (6.5) - KPCA
+% Weight for Error in Training Data (from 0 to 1)
+WeightTrain = 0.5;
+% Number of Artificial Neural Network Evaluations
+NumExecutions = 50;
+
+
+% For Kernel PCA
+Objective_KPCA = FeatureSelectionObjective(...
+    ones(1,Data_KPCA.d), Data_KPCA, WeightTrain, NumExecutions);
 
 %% (7) Comparison of Methods    
 % This Section Calculates The Classification Error Using The Selected

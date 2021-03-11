@@ -38,7 +38,8 @@ function [K] = ComputeKernelMatrix(X, Kernel)
 % More Kernel Functions Can be found at:
 % http://crsouza.com/2010/03/17/kernel-functions-for-machine-learning-applications/#linear
 
-% Input Data: M by p Matrix (M: # of Observations, p: # of Features)
+% Input Data: M by p Matrix (M: # of Observations, p: # of Features) -
+% Reversed 
 % Kernel: Structure Including "Type" and "Parameter"
 
 switch Kernel.Type
@@ -53,29 +54,91 @@ switch Kernel.Type
         sy = sum(X.^2, 2);
         xy = 2*(X*X');
         K = exp(((xy-sx)-sy')./Kernel.Parameter^2);
-%         Why is the -ve sign missing here?
+
         
     case 'HypTan' % Write Code for Hyperbolic Tangent Kernel
         K = tanh(Kernel.Parameter(1) + Kernel.Parameter(2).* X * X');
         
     case 'Laplacian' % Write Code for Laplacian Kernel
-        % num of features
-        p = shape(X, 2);
-        m = shape(X, 1);
+        % num of observations
+        % our X is (p, m) -> rows are features and columns are obs
         
-        K = 
+        m = size(X, 1); % this gives us the number of columns (obs)
+        xi_minus_xj = zeros(m);
+
+        for i = 1:m
+            for j = 1:m
+                xi_minus_xj(i,j) = norm(X(i, :) - X(j, :));
+            end
+        end
+        
+        K = exp(xi_minus_xj./(-1 * Kernel.Parameter));
         
     case 'RationalQuadratic' % Write Code for Rational Quadratic Kernel
-        % K = ;
+        % num of observations
+        % our X is (p, m) -> rows are features and columns are obs
+        
+        m = size(X, 1); % this gives us the number of columns (obs)
+        xi_minus_xj = zeros(m);
+
+        for i = 1:m
+            for j = 1:m
+                xi_minus_xj(i,j) = norm(X(i, :) - X(j, :));
+            end
+        end
+        
+        xi_minus_xj = xi_minus_xj.^2;
+        
+        K = (1 - (xi_minus_xj ./ (xi_minus_xj + Kernel.Parameter)));
+  
         
     case 'MultiQuadric' % Write Code for MultiQuadric Kernel
-        % K = ;
+        % num of observations
+        % our X is (p, m) -> rows are features and columns are obs
+        
+        m = size(X, 1); % this gives us the number of columns (obs)
+        xi_minus_xj = zeros(m);
+
+        for i = 1:m
+            for j = 1:m
+                xi_minus_xj(i,j) = norm(X(i, :) - X(j, :));
+            end
+        end
+        
+        xi_minus_xj = xi_minus_xj.^2;
+        
+        K = sqrt(xi_minus_xj + Kernel.Parameter);
+
         
     case 'Power' % Write Code for Power Kernel
-        % K = ;
+        % num of observations
+        % our X is (p, m) -> rows are features and columns are obs
+        
+        m = size(X, 1); % this gives us the number of columns (obs)
+        xi_minus_xj = zeros(m);
+
+        for i = 1:m
+            for j = 1:m
+                xi_minus_xj(i,j) = norm(X(i, :) - X(j, :));
+            end
+        end
+        
+        K = -1.* (xi_minus_xj.^Kernel.Parameter);
         
     case 'Log' % Write Code for Log Kernel   
-    % K = ;
+         % num of observations
+        % our X is (p, m) -> rows are features and columns are obs
+        
+        m = size(X, 1); % this gives us the number of columns (obs)
+        xi_minus_xj = zeros(m);
+
+        for i = 1:m
+            for j = 1:m
+                xi_minus_xj(i,j) = norm(X(i, :) - X(j, :));
+            end
+        end
+        
+        K = -1 .* log(xi_minus_xj.^Kernel.Parameter + 1);
     
 end
 
