@@ -1,7 +1,7 @@
 %% Reference
 % This Code was adopted from: 
 % Mostapha Kalami Heris, NSGA-III: Non-dominated Sorting Genetic Algorithm, 
-% the Third Version — MATLAB Implementation (URL: https://yarpiz.com/456/ypea126-nsga3), Yarpiz, 2016.
+% the Thir Version — MATLAB Implementation (URL: https://yarpiz.com/456/ypea126-nsga3), Yarpiz, 2016.
 % Link: https://www.mathworks.com/matlabcentral/fileexchange/60678-nsga-iii-in-matlab?s_tid=prof_contriblnk
 
 % This code was modifies for "MECE 788: Applied Computational Intelligence

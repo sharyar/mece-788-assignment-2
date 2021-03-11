@@ -7,13 +7,19 @@ function [Offspring] = Mutation_Incomplete(Parent, mu)
 % NumGenes Must be between 1 and length(Parent)
 
 % Select NumGenes of Parent Randomly
-num_genes_to_mutate = round(mu * length(Parent));
+num_genes_to_mutate = ceil(mu * length(Parent));
+
+% permutation function that outputs the num_genes_to_mutate for the number
+% of indices and then uses them to flip the specific indices. 
+perm_idx = randperm(length(Parent), num_genes_to_mutate);
+
 Offspring = Parent;
 
 % Apply Mutation
-for i=1:num_genes_to_mutate
+for i=1:length(perm_idx)
     % will invert a 1 to 0 and 0 to 1!
-    Offspring(i) = abs(Offspring(i) - 1);
+    pos = perm_idx(i);
+    Offspring(pos) = 1 - Offspring(pos);
 end
 
 % **********************************************
@@ -23,4 +29,4 @@ end
 if sum(Offspring) == 0
     Offspring = Parent;
 end
-end
+end 

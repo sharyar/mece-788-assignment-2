@@ -47,9 +47,15 @@ end
 function [Offspring1, offspring2] = DoublePointCrossover(Parent1, Parent2)
 % This Function Perform Double Point Crossover
 
-% Select Two Random Numbers
-i1 = randi([1 length(Parent1)-1]);
-i2 = randi([1 length(Parent1)-1]);
+% Select Two Random Numbers - implement forced randomness in case numbers
+% are the same #TODO - permutation of 1-10! pick the first two numbers
+i12 = randperm(length(Parent1)-1, 2);
+
+i1 = i12(1);
+i2 = i12(2);
+
+% i1 = randi([1 length(Parent1)-1]);
+% i2 = randi([1 length(Parent1)-1]);
 
 if i2 > i1
     Offspring1 = [Parent1(1:i1) Parent2(i1+1:i2) Parent2(i2+1:end)];
@@ -67,7 +73,7 @@ function [Offspring1, offspring2] = UniformCrossover(Parent1, Parent2)
 % This Function Perform Uniform Crossover
 
 % Create A Random Mask of 0s and 1s with Similar Length to Parents
-il = logical(randi(1, [1 length(Parent1)]));
+il = logical(randi([0,1], [1 length(Parent1)]));
 il_invert = ~il;
 
 % Initialize offspring vectors

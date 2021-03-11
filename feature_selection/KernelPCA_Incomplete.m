@@ -46,19 +46,24 @@ switch Kernel.Type
         K = (X*X').^Kernel.Parameter;
         
     case 'Polynomial' % Write Code for Polynomial Kernel
-        % K = ;
+        K = (1 + X*X').^Kernel.Parameter;
         
     case 'Gaussian'
         sx = sum(X.^2, 2);
         sy = sum(X.^2, 2);
         xy = 2*(X*X');
         K = exp(((xy-sx)-sy')./Kernel.Parameter^2);
+%         Why is the -ve sign missing here?
         
     case 'HypTan' % Write Code for Hyperbolic Tangent Kernel
-        % K = ;
+        K = tanh(Kernel.Parameter(1) + Kernel.Parameter(2).* X * X');
         
     case 'Laplacian' % Write Code for Laplacian Kernel
-        % K = ;
+        % num of features
+        p = shape(X, 2);
+        m = shape(X, 1);
+        
+        K = 
         
     case 'RationalQuadratic' % Write Code for Rational Quadratic Kernel
         % K = ;
